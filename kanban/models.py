@@ -6,6 +6,7 @@ class User(models.Model):
     password = models.CharField(max_length = 150, blank = False, null = False)
 
     class Meta:
+        db_table = "User"
         constraints = [
             models.UniqueConstraint(
                 fields=["id", "email"],
@@ -13,31 +14,14 @@ class User(models.Model):
             )
         ]
 
-    def getValues(self):
-        data = {}
-        data['id'] = self.id
-        data['email'] = self.email
-        return data
-    
-    def setValues(self, data):
-        self.email = data['email']
-        self.password = data['password']
-
 
 class Board(models.Model):
     board_title = models.CharField(max_length = 150, blank = False, null = False)
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    user = models.ForeignKey(User, related_name='boards', on_delete = models.CASCADE)
 
-    def getValues(self):
-        data = {}
-        data['id'] = self.id
-        data['board_title'] = self.board_title
-        # data['user'] = self.user.getValues()
-        return data
+    class Meta:
+        db_table = "Board"
 
-    def setValues(self, data):
-        self.board_title = data['board_title']
-        # self.user = data['user']
 
 class List(models.Model):
     TYPE_OF_STATUS = (
@@ -47,8 +31,18 @@ class List(models.Model):
         ('D', 'Deleted')
     )
 
-    list_title = models.CharField(max_length = 1, choices = TYPE_OF_STATUS, blank = False, null = True)
-    board = models.ForeignKey(Board, on_delete = models.CASCADE)
+    status = models.CharField(max_length = 1, choices = TYPE_OF_STATUS, blank = False, null = False)
+    board = models.ForeignKey(Board, related_name="lists", on_delete = models.CASCADE)
+
+    class Meta:
+        db_table = "List"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["status", "board"],
+                name="unique board status",
+            )
+        ]
+
 
 class Card(models.Model):
     TYPE_OF_EMOJI = (
@@ -63,4 +57,7 @@ class Card(models.Model):
     is_memorable = models.BooleanField(default = True)
     emoji = models.CharField(max_length = 1, choices = TYPE_OF_EMOJI)
     next_card_id = models.ForeignKey("Card", on_delete = models.SET_NULL, blank=True, null=True)
-    list = models.ForeignKey(List, on_delete = models.CASCADE)
+    list = models.ForeignKey(List, related_name="cards", on_delete = models.CASCADE)
+
+    class Meta:
+        db_table = "Card"
