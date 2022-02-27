@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 
-from kanban.views import UserViewset
+from kanban.views import UserViewset, CardViewset
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^user/(?P<user_id>\d+)/$', UserViewset.as_view({'get':'retrieve'})),
-    path('user', UserViewset.as_view({'post':'create'}))
+    path('user/<int:user_id>', UserViewset.as_view({'get':'retrieve'})),
+    path('user', UserViewset.as_view({'post':'create'})),
+    path('user/<int:user_id>/board/<int:board_id>/status/<status>/card', CardViewset.as_view({'get':'list', 'post':'create'})),
+    path('user/<int:user_id>/board/<int:board_id>/card/<int:card_id>', CardViewset.as_view({'put':'update', 'patch':'partial_update'})),
 ]
