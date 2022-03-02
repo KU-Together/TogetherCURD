@@ -23,12 +23,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      - name: Generate Environment Variables File for Production
-        run: |
-          echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" >> .env
+      - name: Generate Environment Variables for Production
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          
       # Runs a single command using the runners shell
       - name: Docker Build
         run: |
