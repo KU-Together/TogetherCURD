@@ -23,5 +23,5 @@ urlpatterns = [
     path('user/<int:user_id>', UserViewset.as_view({'get':'retrieve'})),
     path('user', UserViewset.as_view({'post':'create'})),
     path('user/<int:user_id>/board/<int:board_id>/status/<status>/card', CardViewset.as_view({'get':'list', 'post':'create'})),
-    path('user/<int:user_id>/board/<int:board_id>/card/<int:card_id>', CardViewset.as_view({'put':'update', 'patch':'partial_update'})),
+    path('user/<int:user_id>/board/<int:board_id>/status/<status>/card/<int:card_id>', CardViewset.as_view({'patch':'partial_update', 'delete': 'destroy'})),
 ]
