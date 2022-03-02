@@ -1,8 +1,13 @@
 from rest_framework import serializers
 from .models import User, Board, List, Card
 
+class PrevCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Card
+        fields = ('id',)
 
 class CardSerializer(serializers.ModelSerializer):
+    prev_card = PrevCardSerializer().data
     class Meta:
         model = Card
         fields = (
@@ -12,10 +17,9 @@ class CardSerializer(serializers.ModelSerializer):
             "task_detail",
             "is_memorable",
             "emoji",
-            "next_card_id",
-            "list"
+            "prev_card",
+            "list",
         )
-        partial=True
 
 class ListSerializer(serializers.ModelSerializer):
     cards = CardSerializer(many=True, read_only=True)
