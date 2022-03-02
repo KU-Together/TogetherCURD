@@ -14,8 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+
+from kanban.views import UserViewset, CardViewset
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('user/<int:user_id>', UserViewset.as_view({'get':'retrieve'})),
+    path('user', UserViewset.as_view({'post':'create'})),
+    path('user/<int:user_id>/board/<int:board_id>/status/<status>/card', CardViewset.as_view({'get':'list', 'post':'create'})),
+    path('user/<int:user_id>/board/<int:board_id>/status/<status>/card/<int:card_id>', CardViewset.as_view({'patch':'partial_update', 'delete': 'destroy'})),
 ]
