@@ -56,7 +56,7 @@ class Card(models.Model):
     task_detail = models.TextField()
     is_memorable = models.BooleanField(default = True)
     emoji = models.CharField(max_length = 1, choices = TYPE_OF_EMOJI)
-    next_card_id = models.ForeignKey("Card", on_delete = models.SET_NULL, blank=True, null=True)
+    prev_card = models.ForeignKey("self", on_delete = models.SET_NULL, blank=True, null=True)
     list = models.ForeignKey(List, related_name="cards", on_delete = models.CASCADE)
 
     class Meta:
